@@ -173,7 +173,12 @@ impl Point {
         Point(self.0.add_or_double_a0(&other.0, Curve))
     }
     fn scale<'b>(&self, other: &'b Scalar) -> Self {
-        Point(self.0.scale_a0(&other.to_bytes(), Curve))
+        let bytes = other.to_bytes();
+        let mut idx = 0;
+        while idx < bytes.len() && bytes[idx] == 0 {
+            idx += 1;
+        }
+        Point(self.0.scale_a0(&bytes[idx..], Curve))
     }
 }
 
