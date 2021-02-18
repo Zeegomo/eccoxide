@@ -442,6 +442,25 @@ where
     }
 
     #[inline]
+    fn scalar_mul_daa_limbs8_a0_u64<C: WeierstrassCurve<FieldElement = FE> + WeierstrassCurveA0>(
+        &self,
+        mut n: u64,
+        curve: C,
+    ) -> Self {
+        let mut a: Point<FE> = self.clone();
+        let mut q: Point<FE> = Point::infinity();
+
+        while n != 0 {
+            a = a.double_a0(curve);
+            if n & 1 != 0 {
+                q = q.add_or_double_a0(&a, curve);
+            }
+            n >>= 1;
+        }
+        q
+    }
+
+    #[inline]
     fn scalar_mul_daa_limbs8_a0<C: WeierstrassCurve<FieldElement = FE> + WeierstrassCurveA0>(
         &self,
         n: &[u8],
@@ -463,6 +482,14 @@ where
 
     pub fn scale<C: WeierstrassCurve<FieldElement = FE>>(&self, n: &[u8], curve: C) -> Self {
         self.scalar_mul_daa_limbs8(n, curve)
+    }
+
+    pub fn scale_a0_u64<C: WeierstrassCurve<FieldElement = FE> + WeierstrassCurveA0>(
+        &self,
+        n: u64,
+        curve: C,
+    ) -> Self {
+        self.scalar_mul_daa_limbs8_a0_u64(n, curve)
     }
 
     pub fn scale_a0<C: WeierstrassCurve<FieldElement = FE> + WeierstrassCurveA0>(

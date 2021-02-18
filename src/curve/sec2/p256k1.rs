@@ -180,6 +180,10 @@ impl Point {
         }
         Point(self.0.scale_a0(&bytes[idx..], Curve))
     }
+
+    pub fn scale_u64<'b>(&self, other: u64) -> Self {
+        Point(self.0.scale_a0_u64(other, Curve))
+    }
 }
 
 #[cfg(test)]
